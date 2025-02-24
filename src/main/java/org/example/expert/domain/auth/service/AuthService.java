@@ -26,8 +26,6 @@ public class AuthService {
     @Transactional
     public SignupResponse signup(SignupRequest signupRequest) {
 
-        String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
-
         UserRole userRole = UserRole.of(signupRequest.getUserRole());
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
@@ -36,7 +34,7 @@ public class AuthService {
 
         User newUser = new User(
                 signupRequest.getEmail(),
-                encodedPassword,
+                passwordEncoder.encode(signupRequest.getPassword()), // 에러 검증 통과 후 encoder 사용
                 userRole
         );
         User savedUser = userRepository.save(newUser);
